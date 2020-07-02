@@ -1,0 +1,8 @@
+plugin: community.vmware.vmware_vm_inventory
+strict: false
+hostname: <vsphere hostname>
+username: <vsphere username>
+password: <vsphere password>
+validate_certs: false
+compose:
+  ansible_host: guest.hostName # this allows ansible to connect to the host. Required for Windows hosts in AD so that it connects to their FQDN. Requires vmware tools installed
