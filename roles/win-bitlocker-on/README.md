@@ -1,7 +1,7 @@
-win-bitlocker-on
+win-bitlocker
 =========
 
-Uses powershell resume-bitlocker to turn bitlocker on for all drives
+Uses powershell resume-bitlocker and suspend-bitlocker to manipulate bitlocker state for all drives
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ Bitlocker must be installed
 Role Variables
 --------------
 
-None.
+bitlocker_state: defaults to "resume" but can be set to "suspend" to turn off bitlocker
 
 Dependencies
 ------------
