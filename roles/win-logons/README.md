@@ -11,7 +11,7 @@ None.
 Role Variables
 --------------
 
-None.
+logon_state: defaults to "enable" but can be set to "disable" to disallow logons
 
 Dependencies
 ------------
