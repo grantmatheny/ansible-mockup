@@ -46,7 +46,9 @@
         msg: "Going to reboot and try again"
       when: wu_reboot == "yes"
     - include_role:
-        name: win-bitlocker-off
+        name: win-bitlocker
+      vars:
+        bitlocker_state: suspend
       when: wu_reboot == "yes"
     - win_reboot:
       when: wu_reboot == "yes"
