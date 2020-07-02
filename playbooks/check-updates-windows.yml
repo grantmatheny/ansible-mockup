@@ -1,0 +1,15 @@
+---
+# check-updates-windows.yml
+- hosts: <wsus server>
+  gather_facts: false
+  name: Check WSUS for unapproved updates
+  vars:
+    approval_type: Unapproved
+  roles:
+    - win-wsus
+
+- hosts: win_all
+  name: Check all servers for needed updates
+  roles:
+    - win-check-logins
+    - win-wu-universal
