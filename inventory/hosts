@@ -1,0 +1,31 @@
+all:
+  children:
+    win_all:
+      children:
+        windows8Server64Guest:
+        windows9Server64Guest:
+        windows2019srv_64Guest:
+        win_temp:
+          hosts:
+        win_physical:
+          hosts:
+            host1.fqdn.local
+        win_fileserver:
+          hosts:
+            host1.fqdn.local
+            host2.fqdn.local
+    linux:
+     children:
+        centos7_64Guest:
+        centos8_64Guest:
+        rhel6_64Guest:
+        rhel8_64Guest:
+        ubuntu64Guest:
+        linux_physical:
+          hosts:
+            host3.fqdn.local
+        ubuntu:
+          children:
+            ubuntu64Guest:
+          vars:
+            ansible_python_interpreter: /usr/bin/python3
