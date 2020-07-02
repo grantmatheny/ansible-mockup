@@ -1,0 +1,8 @@
+---
+- hosts: all
+  name: Check Logged in Users
+  vars:
+    who_playbook: true
+  roles:
+    - { role: linux-who-check-logins, when: "ansible_facts['system'] == 'Linux'" }
+    - { role: win-check-logins, when: "ansible_facts['system'] == 'Win32NT'" }
