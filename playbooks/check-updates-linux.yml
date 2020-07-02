@@ -1,0 +1,12 @@
+---
+- hosts: linux
+  name: Check for updates and logged on users on Linux systems
+  tasks:
+  - include_role:
+      name: linux-who-check-logins
+  - include_role:
+      name: centos8-dnf-check
+    when: "ansible_facts['distribution_major_version'] == '8'"
+  - include_role:
+      name: ubuntu-apt-check
+    when: "ansible_facts['os_family'] == 'Debian'"
