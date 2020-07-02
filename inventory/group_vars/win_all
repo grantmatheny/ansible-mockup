@@ -1,0 +1,8 @@
+
+---
+ansible_user: <username>@domain.local
+ansible_password: <super-secret password>
+ansible_connection: winrm
+ansible_winrm_transport: kerberos
+ansible_winrm_server_cert_validation: ignore
+ansible_winrm_kerberos_delegation: True
