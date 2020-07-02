@@ -2,9 +2,11 @@ all:
   children:
     win_all:
       children:
+        # these are the groups defined by vmware. Put them here so they inherit the win_all vars file
         windows8Server64Guest:
         windows9Server64Guest:
         windows2019srv_64Guest:
+        # these groups are my own
         win_temp:
           hosts:
         win_physical:
@@ -16,11 +18,11 @@ all:
             host2.fqdn.local
     linux:
      children:
-        centos7_64Guest:
+        # these are the groups defined by vmware
         centos8_64Guest:
-        rhel6_64Guest:
         rhel8_64Guest:
         ubuntu64Guest:
+        # these are my groups
         linux_physical:
           hosts:
             host3.fqdn.local
