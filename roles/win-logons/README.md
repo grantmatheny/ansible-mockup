@@ -1,4 +1,4 @@
-win-logons-enable
+win-logons
 =========
 
 Re-enables connections to RDP on a server. Also checks that the firewall rule is turned on. Can be used on a fresh server to allow connections.

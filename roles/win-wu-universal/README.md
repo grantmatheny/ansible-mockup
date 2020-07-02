@@ -46,10 +46,18 @@ Example Playbook
     wu_state: "installed"
     all_users: true
   roles:
-    - win-logons-disable
+    - role: win-logons
+      vars:
+        logon_state: disabled
     - win-log-everyone-off
-    - win-bitlocker-off
+    - role: win-bitlocker
+      vars:
+        bitlocker_state: suspend
     - win-choco-update-install
     - win-wu-universal
-    - win-bitlocker-on
-    - win-logons-enable
+    - role: win-bitlocker
+      vars:
+        bitlocker_state: resume
+    - win-logons
+      vars:
+        logon_state: enabled
