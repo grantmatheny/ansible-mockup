@@ -1,0 +1,5 @@
+---
+ansible_user: <username>
+ansible_become_password: <super-secret password>
+ansible_become: yes
+ansible_become_user: root
