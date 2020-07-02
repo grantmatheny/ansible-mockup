@@ -1,0 +1,10 @@
+---
+- hosts: linux
+  name: Install updates on all Linux machines (don't forget imsure tag)
+  roles:
+    - { role: linux-who-check-logins, tags: always }
+    - { role: centos8-dnf-update, when: "ansible_facts['distribution_major_version'] == '8' and occupied_logons is not defined", tags: [never, imsure] }
+    - { role: ubuntu-apt-update, when: "ansible_facts['os_family'] == 'Debian' and occupied_logons is not defined", tags: [never, imsure] }
+  tasks:
+    - debug: msg="Did you forget the imsure tag?"
+      run_once: true
