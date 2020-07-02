@@ -1,0 +1,4 @@
+---
+- hosts: win_all
+  roles:
+    - win-reboot-check-all
