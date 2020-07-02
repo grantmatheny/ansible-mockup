@@ -1,0 +1,4 @@
+---
+ansible_user: <different username>
+ansible_become_password: <different password>
+# in case one of your hosts has a different password
