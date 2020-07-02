@@ -10,10 +10,21 @@
     wu_state: "installed"
     all_users: true
   roles:
-    - win-logons-disable
+    - role: win-logons
+      vars:
+        logon_state: disabled
     - win-log-everyone-off
-    - win-bitlocker-off
+    - role: win-bitlocker
+      vars:
+        bitlocker_state: suspend
     - win-choco-update-install
+    - win-anaconda-update-packages
+    - win-r-update-packages
+    - win-stata-update
     - win-wu-universal
-    - win-bitlocker-on
-    - win-logons-enable
+    - role: win-bitlocker
+      vars:
+        bitlocker_state: resume
+    - role: win-logons
+      vars:
+        logon_state: enabled
