@@ -1,7 +1,7 @@
 win-bitlocker
 =========
 
-Uses powershell resume-bitlocker and suspend-bitlocker to manipulate bitlocker state for all drives
+Uses powershell resume-bitlocker and suspend-bitlocker to manipulate bitlocker state for all drives. Thanks to reddit user https://www.reddit.com/user/zoredache/ for helping consolidate my on and off roles
 
 Requirements
 ------------
