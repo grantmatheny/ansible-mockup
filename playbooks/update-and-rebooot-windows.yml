@@ -1,0 +1,19 @@
+---
+- hosts: "{{ target }}"
+  name: Install Updates and Reboot
+  vars_prompt:
+    - name: target
+      prompt: "Enter host(s) or group(s), comma-separated"
+      private: no
+  vars:
+    wu_reboot: "yes"
+    wu_state: "installed"
+    all_users: true
+  roles:
+    - win-logons-disable
+    - win-log-everyone-off
+    - win-bitlocker-off
+    - win-choco-update-install
+    - win-wu-universal
+    - win-bitlocker-on
+    - win-logons-enable
