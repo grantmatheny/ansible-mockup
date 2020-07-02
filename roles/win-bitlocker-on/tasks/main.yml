@@ -1,16 +1,25 @@
+
 ---
-# tasks file for roles/bitlocker-on
+# tasks file for roles/win-bitlocker
 - name: Determine whether bitlocker installed or not
   win_shell: (Get-WindowsFeature -Name Bitlocker).Installed
   register: bitlockerinstalled
   changed_when: not bitlockerinstalled.stdout_lines[0]|bool
+
 - name: Determine current bitlocker status
   win_shell: (Get-psdrive -PSProvider FileSystem).root | Get-BitlockerVolume
   register: bitlockerprestatus
   changed_when: false
   when: bitlockerinstalled.stdout_lines[0]|bool
+
 - name: Enumerate all filesystem drives and turn on bitlocker
   win_shell: (get-psdrive -PSProvider FileSystem).root | resume-bitlocker
-  register: bitlockeron
-  changed_when: bitlockerprestatus.stdout_lines != bitlockeron.stdout_lines
-  when: bitlockerinstalled.stdout_lines[0]|bool
+  register: bitlocker_state_current
+  changed_when: bitlockerprestatus.stdout_lines != bitlocker_state_current.stdout_lines
+  when: bitlockerinstalled.stdout_lines[0]|bool and bitlocker_state|d('resume') == 'resume'
+
+- name: Enumerate all filesystem drives and turn off bitlocker
+  win_shell: (get-psdrive -PSProvider FileSystem).root | suspend-bitlocker
+  register: bitlocker_state_current
+  changed_when: bitlockerprestatus.stdout_lines != bitlocker_state_current.stdout_lines
+  when: bitlockerinstalled.stdout_lines[0]|bool and bitlocker_state|d('resume') == 'suspend'
