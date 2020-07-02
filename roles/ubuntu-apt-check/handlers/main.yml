@@ -1,0 +1,6 @@
+---
+# handlers file for roles/centos-check
+- name: display count
+  listen: Ubuntu Packages Needed
+  debug:
+    var: updates.stdout_lines

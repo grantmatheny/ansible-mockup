@@ -1,0 +1,18 @@
+---
+# tasks file for roles/who
+- name: Check if users are logged in
+  block:
+    - name: Run Who
+      shell: w | awk '$1 !~ /ansible-user/ && $1 !~ /root/ {print $1,$2,$3,$5,$6}'
+      register: users
+      changed_when: false
+      failed_when: users.stdout_lines|length > 2
+  rescue:
+    - name: Show users
+      debug:
+        msg: "{{ users.stdout }}\n"
+      changed_when: who_playbook is defined
+      notify: Users Logged In
+    - name: Set fact for later use
+      set_fact:
+        occupied_logons: true

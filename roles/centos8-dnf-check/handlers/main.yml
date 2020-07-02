@@ -1,0 +1,6 @@
+---
+# handlers file for roles/centos-check
+- name: Display needed updates
+  listen: Packages Needed Centos 8
+  debug:
+    var: updates8.stdout_lines

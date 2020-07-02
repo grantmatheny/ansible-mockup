@@ -1,0 +1,14 @@
+---
+# handlers file for roles/win-wsus
+- name: Display Errors
+  listen: Sync Failed
+  debug:
+    msg: "{{ lastsync.stdout_lines }}"
+- name: Display needed updates
+  listen: Need Updates
+  debug:
+    var: needed.stdout_lines
+- name: Display installed updates
+  listen: Installed Updates
+  debug:
+    msg: "{{ approval.stdout_lines }}"

@@ -1,0 +1,64 @@
+---
+# tasks file for roles/win-wu-universal
+- name: Force detection
+  block:
+    - name: Make sure we gather facts
+      setup:
+      when: ansible_facts['distribution_major_version'] is not defined
+    - name: Force update detection for modern OS
+      win_shell: UsoClient.exe startscan
+      when: "ansible_facts['distribution_major_version'] == '10'"
+      changed_when: False
+    - name: Force update detection for older OS
+      win_shell: wuauclt.exe /detectnow
+      when: "ansible_facts['distribution_major_version'] != '10'"
+      changed_when: False
+  when: wu_force_detection == "yes"
+
+- name: We're about to do Windows Updates, so this might take a while
+  debug:
+    msg: "Please wait!"
+  run_once: true
+  when: wu_state == "installed"
+
+- name: "Updates {{ wu_state }}"
+  block:
+    - win_updates:
+        state: '{{ wu_state }}'
+        category_names: '{{ wu_categories }}'
+        reboot: '{{ wu_reboot }}'
+      register: update_list
+      changed_when: update_list.found_update_count > 0
+      notify: List Updates
+      when: wu_check_reboot != "yes"
+
+    - win_updates:
+        state: '{{ wu_state }}'
+        category_names: '{{ wu_categories }}'
+        reboot: '{{ wu_reboot }}'
+      register: update_check_reboot
+      notify: Reboot Required
+      changed_when: update_check_reboot.reboot_required | bool
+      when: wu_check_reboot == "yes"
+
+  rescue:
+    - debug:
+        msg: "Going to reboot and try again"
+      when: wu_reboot == "yes"
+    - include_role:
+        name: win-bitlocker-off
+      when: wu_reboot == "yes"
+    - win_reboot:
+      when: wu_reboot == "yes"
+    - win_updates:
+        state: '{{ wu_state }}'
+        category_names: '{{ wu_categories }}'
+        reboot: '{{ wu_reboot }}'
+      register: update_list
+      changed_when: update_list.found_update_count > 0
+      notify: List Updates
+      when: wu_reboot == "yes"
+
+    - debug:
+        msg: "{{ ansible_failed_task }} failed with result {{ ansible_failed_result }}"
+      when: wu_reboot =="no"

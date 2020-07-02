@@ -1,0 +1,19 @@
+---
+# tasks file for roles/chocolatey
+- name: Update or install Chocolatey Packages
+  when:
+  block:
+    - win_chocolatey:
+        name: "{{ choco_install }}"
+        state: latest
+      register: choco_result
+      notify:
+        - Choco Changed
+  rescue:
+    - win_chocolatey:
+        name: "{{ choco_install }}"
+        state: latest
+        ignore_checksums: yes
+      register: choco_result
+      notify:
+        - Choco Changed

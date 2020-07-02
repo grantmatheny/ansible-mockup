@@ -1,0 +1,35 @@
+---
+# tasks file for roles/win-wsus
+- name: Ensure Update Services PS module installed
+  win_psmodule:
+    name: UpdateServices
+    state: present
+- name: Get Last Synchronization Date
+  win_shell: (Get-WsusServer).GetSubscription().GetLastSynchronizationInfo() | select-object -Property EndTime,Result,Error | format-list
+  register: lastsync
+  changed_when: lastsync.stdout.find('Failed') > -1
+  notify: Sync Failed
+- name: Show last sync result
+  debug:
+    msg: '{{ lastsync.stdout_lines.2 }}'
+- name: Get list of needed updates
+  win_shell: Get-WsusUpdate -Approval {{ approval_type }} -Status FailedOrNeeded
+  register: needed
+  changed_when: needed.stdout_lines | length > 0
+  notify: Need Updates
+
+- name: Try to approve updates
+  block:
+    - name: Approve all updates for Servers
+      win_shell: Get-WsusUpdate -Classification All -Approval {{ approval_type }} -Status FailedOrNeeded | Approve-WsusUpdate -Action Install -TargetGroupName "{{ wsus_classification }}"
+      register: approval
+      changed_when: approval.stdout_lines | length > 0
+      notify: Installed Updates
+      when: wsus_approve is defined
+  rescue:
+    - debug:
+        msg: "One or more updates requires EULA acceptance"
+      when: approval.stderr is search("This Update has Microsoft Software License Terms that must be accepted before")
+    - debug:
+        msg: "There was an error"
+      when: approval.stderr is not search("This Update has Microsoft Software License Terms that must be accepted before")

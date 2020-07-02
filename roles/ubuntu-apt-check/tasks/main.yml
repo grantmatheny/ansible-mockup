@@ -1,0 +1,9 @@
+---
+# tasks file for roles/ubuntu-apt-check
+- name: check packages for updates
+  shell: apt update | awk 'f;/Reading state information.../{f=1;}' | awk '{ print $1,$2,$3,$4,$5 }'
+  changed_when: updates.stdout_lines is search("can be upgraded.")
+  args:
+    warn: false
+  register: updates
+  notify: Ubuntu Packages Needed

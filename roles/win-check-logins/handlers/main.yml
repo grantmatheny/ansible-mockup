@@ -1,0 +1,7 @@
+---
+# handlers file for roles/all-check-logged-in
+# not used anymore
+- name: Show users windows
+  listen: Users Logged In Windows
+  debug:
+    msg: "{{ winusers.stdout }}"

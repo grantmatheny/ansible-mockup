@@ -1,0 +1,23 @@
+---
+# handlers file for roles/win-wu-universal
+- name: List installed updates (yellow indicates reboot required)
+  listen: List Updates
+  debug: var=update_list
+  changed_when: update_list.reboot_required | bool
+  when: wu_state == "installed"
+
+- name: List missing updates with details
+  listen: List Updates
+  debug:
+    msg: |
+      {{ ansible_host }} has {{ update_list.found_update_count }} update(s) available.
+      {% for key, value in update_list.updates.items() | list %}
+        - {{ value.title }}
+      {% endfor %}
+  when: wu_state == "searched" and wu_check_reboot != "yes"
+
+- name: Check Reboot
+  listen: Reboot Required
+  debug:
+    msg: "{{ ansible_host }} needs to be rebooted"
+  when: wu_check_reboot == "yes"

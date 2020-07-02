@@ -1,0 +1,35 @@
+---
+# tasks file for roles/centos-install
+- name: install updates using dnf
+  dnf:
+    name: "*"
+    state: latest
+    update_cache: yes
+    # exclude: "criu"
+
+- name: install yum-utils for reboot required
+  dnf:
+    name: yum-utils
+    state: latest
+
+- name: check if reboot is required
+  shell: needs-restarting -r
+  failed_when: false
+  register: reboot_required
+  changed_when: reboot_required.rc != 0
+
+- name: reboot the server if required
+  reboot:
+    post_reboot_delay: 10
+  when: reboot_required.rc != 0
+
+- name: wait for server to come back after reboot
+  wait_for_connection:
+    timeout: 600
+  register: reboot_result
+  when: reboot_required.rc != 0
+
+- name: reboot time
+  debug:
+    msg: "The system rebooted in {{ reboot_result.elapsed }} seconds."
+  when: reboot_required.rc != 0

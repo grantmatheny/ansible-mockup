@@ -1,0 +1,15 @@
+---
+# tasks file for roles/win-log-everyone-off
+- name: Find all disconnected users and log them off
+  win_shell: quser | Select-String "Disc" | ForEach {logoff ($_.tostring() -split ' +')[2]}
+  register: logeveryoneoff
+  failed_when: logeveryoneoff.rc >= 2
+  changed_when: logeveryoneoff.rc == 0
+  when: all_users is not defined
+
+- name: Find all users (including logged in) and log them off
+  win_shell: quser | ForEach {logoff ($_.tostring() -split ' +')[2]}
+  register: logeveryoneoff
+  failed_when: logeveryoneoff.rc >= 2
+  changed_when: logeveryoneoff.rc == 0
+  when: all_users is defined

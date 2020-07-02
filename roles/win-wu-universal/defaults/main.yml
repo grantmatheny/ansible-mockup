@@ -1,0 +1,17 @@
+---
+# defaults file for roles/win-wu-universal
+wu_state: searched
+wu_categories:
+  - SecurityUpdates
+  - CriticalUpdates
+  - UpdateRollups
+  - Application
+  - DefinitionUpdates
+  - FeaturePacks
+  - Updates
+  - Connectors
+  - Tools
+  - Drivers
+wu_reboot: no
+wu_force_detection: "yes"
+wu_check_reboot: no

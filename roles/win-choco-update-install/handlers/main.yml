@@ -1,0 +1,8 @@
+---
+# handlers file for roles/chocolatey
+- name: Chocolatey facts
+  listen: Choco Changed
+  win_chocolatey_facts:
+- name: Chocolatey Packages
+  listen: Choco Changed
+  debug: var=ansible_chocolatey.packages

@@ -1,0 +1,18 @@
+---
+# tasks file for roles/all-check-logged-in
+- name: Check if users are logged on (red if they are)
+  block:
+    - name: Check if other users are logged on Windows
+      win_shell: query user
+      register: winusers
+      failed_when: winusers.stdout_lines|length > 1
+      changed_when: false
+  rescue:
+    - name: Show users windows
+      debug:
+        msg: "{{ winusers.stdout }}"
+      changed_when: who_playbook is defined
+      notify: Users Logged In Windows
+    - name: Set fact for later use if needed
+      set_fact:
+        occupied_logons: true 

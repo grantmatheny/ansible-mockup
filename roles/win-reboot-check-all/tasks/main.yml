@@ -1,0 +1,85 @@
+---
+# tasks file for roles/win-reboot-check-all
+- name: Check for update reboot
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Updates\UpdateExeVolatile
+  register: update_check
+  changed_when: update_check.exists
+
+- name: File Renames 1
+  win_reg_stat:
+    path: HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\PendingFileRenameOperations
+  register: file_renames_1
+  changed_when: file_renames_1.exists
+
+- name: File Renames 2
+  win_reg_stat:
+    path: HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\PendingFileRenameOperations2
+  register: file_renames_2
+  changed_when: file_renames_2.exists
+
+- name: Windows update Auto Update
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired
+  register: w_auto_update
+  changed_when: w_auto_update.exists
+
+- name: Windows Update Update Services
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\Pending
+  register: w_update_services
+  changed_when: w_update_services.sub_keys == "[]"
+
+- name: Post Reboot
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\PostRebootReporting
+  register: post_reboot
+  changed_when: post_reboot.exists
+
+- name: DVDRebootSignal
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\DVDRebootSignal
+  register: dvd_reboot
+  changed_when: dvd_reboot.exists
+
+- name: Component Based Servicing Pending
+  win_reg_stat:
+    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending
+  register: component_reboot_pending
+  changed_when: component_reboot_pending.exists
+
+- name: Component Based Servicing Progress
+  win_reg_stat:
+    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootInProgress
+  register: component_reboot
+  changed_when: component_reboot.exists
+
+- name: Component Based Servicing Packages
+  win_reg_stat:
+    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\PackagesPending
+  register: packages_pending
+  changed_when: packages_pending.exists
+
+- name: ServerManager
+  win_reg_stat:
+    path: HKLM:\SOFTWARE\Microsoft\ServerManager\CurrentRebootAttempts
+  register: reboot_attempts
+  changed_when: reboot_attempts.exists
+
+- name: JoinDomain
+  win_reg_stat:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\JoinDomain
+  register: join_domain_reboot
+  changed_when: join_domain_reboot.exists
+
+- name: AvoidSpnSet
+  win_reg_stat:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\AvoidSpnSet
+  register: avoid_spn_set
+  changed_when: avoid_spn_set.exists
+
+- name: New Computer Name
+  win_reg_stat:
+    path: HKLM:\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName\ComputerName
+  register: newcomputername
+  changed_when: newcomputername.exists

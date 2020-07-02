@@ -1,0 +1,4 @@
+---
+# defaults file for roles/win-wsus
+wsus_classification: All Computers
+approval_type: AnyExceptDeclined

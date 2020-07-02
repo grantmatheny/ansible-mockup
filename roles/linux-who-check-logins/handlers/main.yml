@@ -1,0 +1,6 @@
+---
+# handlers file for roles/who
+- name: Show users
+  listen: Users Logged In
+  debug:
+    msg: "{{ users.stdout }}\n"

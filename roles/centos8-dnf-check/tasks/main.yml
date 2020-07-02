@@ -1,0 +1,10 @@
+---
+# tasks file for roles/centos-check
+- name: check packages for updates
+  shell: dnf list updates | awk 'f;/Available Upgrades/{f=1;}' | awk '{ print $1 }'
+  changed_when: updates8.stdout_lines | length > 0
+  args:
+    warn: false
+  register: updates8
+  notify:
+    - Packages Needed Centos 8

@@ -1,0 +1,61 @@
+---
+# tasks file for roles/win-logons-enable
+- name: Check Firewall rule to allow RDP on TCP port 3389
+  win_firewall_rule:
+    name: Remote Desktop
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: tcp
+    remoteip: # ip range to allow connections from
+    program: "%SystemRoot%\\system32\\svchost.exe"
+    profiles: domain
+    state: present
+    enabled: yes
+
+- name: Disable Permissive Rules (TCP)
+  win_firewall_rule:
+    name: '{{ item }}'
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: tcp
+    remoteip: any
+    profiles: domain,private,public
+    state: absent
+    enabled: no
+  loop:
+    - Remote Desktop Services - User Mode (TCP-In)
+    - Remote Desktop - User Mode (TCP-In)
+
+- name: Disable Permissive Rules (UDP)
+  win_firewall_rule:
+    name: '{{ item }}'
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: udp
+    remoteip: any
+    profiles: domain,private,public
+    state: absent
+    enabled: no
+  loop:
+    - Remote Desktop Services - User Mode (UDP-In)
+    - Remote Desktop - User Mode (UDP-In)
+
+- name: make sure connections are allowed
+  win_regedit:
+    path: HKLM:\System\CurrentControlSet\Control\Terminal Server
+    name: fDenyTSConnections
+    data: 0
+    type: dword
+- name: check current state
+  win_shell: change logon /query
+  register: query
+  changed_when: false
+  failed_when: query.rc > 1
+- name: enable RDP logins
+  win_shell: change logon /enable
+  register: enable
+  changed_when: enable.stderr != query.stderr
+  failed_when: enable.rc > 1
