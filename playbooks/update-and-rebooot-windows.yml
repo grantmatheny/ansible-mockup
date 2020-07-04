@@ -18,9 +18,6 @@
       vars:
         bitlocker_state: suspend
     - win-choco-update-install
-    - win-anaconda-update-packages
-    - win-r-update-packages
-    - win-stata-update
     - win-wu-universal
     - role: win-bitlocker
       vars:
