@@ -6,3 +6,7 @@ password: <vsphere password>
 validate_certs: false
 compose:
   ansible_host: guest.hostName # this allows ansible to connect to the host. Required for Windows hosts in AD so that it connects to their FQDN. Requires vmware tools installed
+keyed_groups:
+- key: tags
+- key: config.guestId
+- key: summary.runtime.powerState
