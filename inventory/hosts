@@ -2,10 +2,12 @@ all:
   children:
     win_all:
       children:
-        # these are the groups defined by vmware. Put them here so they inherit the win_all vars file
-        windows8Server64Guest:
-        windows9Server64Guest:
-        windows2019srv_64Guest:
+        # these are the groups defined by vmware (they are always prefixed with '_'. Put them here so they inherit the win_all vars file
+        _windows8Server64Guest:
+        _windows9Server64Guest:
+        _windows2019srv_64Guest:
+        _windows2019srvNext_64Guest: # this is the name for Windows Server 2022
+        _custom_template: # this is a custom tag I've created and assigned to a machine in VMWare
         # these groups are my own
         win_temp:
           hosts:
@@ -13,21 +15,23 @@ all:
           hosts:
             host1.fqdn.local
         win_fileserver:
+          _win_fileserver: # this adds the contents of a tagged group of machines in VMware to this group alongside the manually defined hosts below
           hosts:
             host1.fqdn.local
             host2.fqdn.local
     linux:
      children:
         # these are the groups defined by vmware
-        centos8_64Guest:
-        rhel8_64Guest:
-        ubuntu64Guest:
+        _centos8_64Guest:
+        _rhel8_64Guest:
+        _ubuntu64Guest:
         # these are my groups
         linux_physical:
           hosts:
             host3.fqdn.local
         ubuntu:
           children:
-            ubuntu64Guest:
+            # putting VMWare-defined guests into this group just for ease of remembering the grou pname
+            _ubuntu64Guest:
           vars:
             ansible_python_interpreter: /usr/bin/python3
